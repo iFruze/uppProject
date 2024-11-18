@@ -22,7 +22,7 @@ namespace uppProject
         }
         public string Surname
         {
-            get { return name; }
+            get { return surname; }
             set
             {
                 if (value == "") throw new ArgumentNullException("Строка для фамилии пустая.");
@@ -40,8 +40,8 @@ namespace uppProject
         }
         public Person()
         {
-            this.Name = "Бенис";
-            this.Surname = "Дуев";
+            this.Name = "Мира";
+            this.Surname = "Камчик";
             this.Birthday = new DateTime(1980, 4, 29);
         }
         public Person(string name, string surname, DateTime birthday)
@@ -51,6 +51,6 @@ namespace uppProject
             this.Birthday = birthday;
         }
         public override string ToString() => $"Имя: {this.Name}\nФамилия: {this.Surname}\nДата рождения: {this.Birthday.ToShortDateString()}";
-        public virtual string ToShortString() => $"Имя: {this.Name}\nФамилия: {this.Surname}";
+        public virtual string ToShortString() => $"{this.Name} {this.Surname}";
     }
 }
