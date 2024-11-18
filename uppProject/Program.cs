@@ -1,4 +1,5 @@
 ﻿using Frame;
+using System.Text.RegularExpressions;
 using uppProject;
 bool f1 = false;
 ResearchTeam team = new ResearchTeam();
@@ -52,20 +53,31 @@ while(true)
                 Console.Write("Имя автора: ");
                 name = Console.ReadLine();
                 Console.Write("Фамилия автора: ");
-                surname = Console.ReadLine();
-                Console.Write("Год рождения автора: ");
-                year = Convert.ToInt32(Console.ReadLine());
-                Console.Write("Месяц рождения автора: ");
-                month = Convert.ToInt32(Console.ReadLine());
-                Console.Write("День рождения автора: ");
-                day = Convert.ToInt32(Console.ReadLine());
-                Console.Write("Год выпуска исследования: ");
-                year1 = Convert.ToInt32(Console.ReadLine());
-                Console.Write("Месяц выпуска исследования: ");
-                month1 = Convert.ToInt32(Console.ReadLine());
-                Console.Write("День выпуска исследования: ");
-                day1 = Convert.ToInt32(Console.ReadLine());
-                Paper pap = new Paper(publication, new Person(name, surname, new DateTime(year, month, day)), new DateTime(year1, month1, day1));
+                surname = Console.ReadLine(); 
+                bool f = true;
+                DateTime dataB;
+                do 
+                {
+                    Console.WriteLine("Введите дату рождения автора в формате: yyyy.mm.dd"); 
+                    string date1 = Console.ReadLine();
+                    if (!DateTime.TryParse(date1, out dataB))
+                    { 
+                        Console.WriteLine("Ошибка ввода, повторите."); 
+                        f = false; 
+                    }
+                } while (!f);
+                DateTime dataP;
+                do
+                {
+                    Console.WriteLine("Введите дату выпска исследования в формате: yyyy.mm.dd");
+                    string date1 = Console.ReadLine();
+                    if (!DateTime.TryParse(date1, out dataP))
+                    {
+                        Console.WriteLine("Ошибка ввода, повторите.");
+                        f = false;
+                    }
+                } while (!f);
+                Paper pap = new Paper(publication, new Person(name, surname, dataB), dataP);
                 team.AddPapers(pap);
                 break;
             case 3:
@@ -76,12 +88,18 @@ while(true)
                 Console.WriteLine($"Самая поздняя публикация:\n{team.Search()}");
                 break;
             case 4:
+                
                 Paper[] paper1 = new Paper[1000000];
                 for (int i = 0; i < paper1.Length; i++) paper1[i] = new Paper();
+                System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+                sw.Start();
                 int a1 = Environment.TickCount;
                 for (int i = 0; i < paper1.Length; i++)
                     paper1[i].Date = DateTime.Now;
                 int a2 = Environment.TickCount;
+                sw.Stop();
+                Console.WriteLine(  sw.ElapsedMilliseconds);
+                Console.WriteLine(  sw.ElapsedTicks);
                 Console.WriteLine($"Время затраченноет на операцию с одномерным массивом: {a2 - a1}");
                 Paper[,] paper2 = new Paper[1000, 1000];
                 for (int i = 0; i < paper2.GetLength(0); i++)
@@ -113,7 +131,7 @@ while(true)
                     throw new Exception("Сначала надо создать публикацию.");
                 }
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine(team.Show());
+                Console.WriteLine(team);
                 Console.ResetColor();
                 break;
             case 6:

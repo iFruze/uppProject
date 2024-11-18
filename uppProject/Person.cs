@@ -16,7 +16,7 @@ namespace uppProject
             get { return name; }
             set
             {
-                if (value == "") throw new ArgumentNullException("Строка для имени пустая.");
+                if (value == "") throw new ArgumentException("Строка для имени пустая.");
                 else name = value;
             }
         }
@@ -25,7 +25,7 @@ namespace uppProject
             get { return surname; }
             set
             {
-                if (value == "") throw new ArgumentNullException("Строка для фамилии пустая.");
+                if (value == "") throw new ArgumentException("Строка для фамилии пустая.");
                 else surname = value;
             }
         }
@@ -34,7 +34,7 @@ namespace uppProject
             get { return birthday; }
             set
             {
-                if (value.ToShortDateString() == "") throw new ArgumentNullException("Строка для даты рождения пустая.");
+                if (value.ToShortDateString() == "") throw new ArgumentException("Строка для даты рождения пустая.");
                 else birthday = value;
             }
         }

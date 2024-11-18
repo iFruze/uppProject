@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 using Frame;
 namespace uppProject
 {
-    internal class ResearchTeam
+   internal class ResearchTeam
     {
         private string title;
         private string org;
         private int regNumber;
         private TimeFrame time;
         private Paper[] papers;
+        public override string ToString() => $"Исследование номер {this.RegNumber}\nНазвание: {this.Title}\nОрганизация, проводившая исследования: {this.Org}\nВремя проведения исследований: {this.Time}\n{this.Show()}";
         public string Title
         {
             get
@@ -152,14 +153,15 @@ namespace uppProject
         }
         public string Show()
         {
-            StringBuilder stringBuilder = new StringBuilder("Страницы:\n\n");
+            StringBuilder stringBuilder = new StringBuilder("\nСтраницы:\n\n");
             foreach (Paper p in papers)
             {
                 stringBuilder.Append(p.ToString());
-                stringBuilder.Append("\n");
+                stringBuilder.Append("\n\n");
             }
             return stringBuilder.ToString();
         }
+        
         public Paper Search()
         {
             Paper res = papers[0];
