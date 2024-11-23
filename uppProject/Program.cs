@@ -58,17 +58,20 @@ while(true)
                 DateTime dataB;
                 do 
                 {
+                    f = true;
                     Console.WriteLine("Введите дату рождения автора в формате: yyyy.mm.dd"); 
                     string date1 = Console.ReadLine();
                     if (!DateTime.TryParse(date1, out dataB))
-                    { 
-                        Console.WriteLine("Ошибка ввода, повторите."); 
-                        f = false; 
+                    {
+                        Console.WriteLine("Ошибка ввода, повторите.");
+                        f = false;
                     }
-                } while (!f);
+                    
+                } while (f==false);
                 DateTime dataP;
                 do
                 {
+                    f = true;
                     Console.WriteLine("Введите дату выпска исследования в формате: yyyy.mm.dd");
                     string date1 = Console.ReadLine();
                     if (!DateTime.TryParse(date1, out dataP))
@@ -89,7 +92,7 @@ while(true)
                 break;
             case 4:
                 
-                Paper[] paper1 = new Paper[1000000];
+                Paper[] paper1 = new Paper[10000];
                 for (int i = 0; i < paper1.Length; i++) paper1[i] = new Paper();
                 System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
                 sw.Start();
@@ -99,31 +102,32 @@ while(true)
                 int a2 = Environment.TickCount;
                 sw.Stop();
                 Console.WriteLine(  sw.ElapsedMilliseconds);
-                Console.WriteLine(  sw.ElapsedTicks);
-                Console.WriteLine($"Время затраченноет на операцию с одномерным массивом: {a2 - a1}");
-                Paper[,] paper2 = new Paper[1000, 1000];
+                //Console.WriteLine(  sw.ElapsedTicks);
+                Paper[,] paper2 = new Paper[100, 100];
                 for (int i = 0; i < paper2.GetLength(0); i++)
                     for (int j = 0; j < paper2.GetLength(1); j++)
                         paper2[i, j] = new Paper();
-                a1 = Environment.TickCount;
+                sw.Reset();
+                sw.Start();
                 for (int i = 0; i < paper2.GetLength(0); i++)
                     for (int j = 0; j < paper2.GetLength(1); j++)
                         paper2[i, j].Date = DateTime.Now;
-                a2 = Environment.TickCount;
-                Console.WriteLine($"Время затраченноет на операцию с двумерным массивом: {a2 - a1}");
-                Paper[][] paper3 = new Paper[1000][];
+                sw.Stop();
+                Console.WriteLine(sw.ElapsedMilliseconds);
+                Paper[][] paper3 = new Paper[100][];
                 for (int i = 0; i < paper3.GetLength(0); i++)
                 {
-                    paper3[i] = new Paper[1000];
+                    paper3[i] = new Paper[100];
                     for (int j = 0; j < paper3[i].Length; j++)
                         paper3[i][j] = new Paper();
                 }
-                a1 = Environment.TickCount;
+                sw.Reset();
+                sw.Start();
                 for (int i = 0; i < paper3.GetLength(0); i++)
                     for (int j = 0; j < paper3[i].Length; j++)
                         paper3[i][j].Date = DateTime.Now;
-                a2 = Environment.TickCount;
-                Console.WriteLine($"Время затраченноет на операцию с двумерным ступенчатым массивом: {a2 - a1}");
+                sw.Stop();
+                Console.WriteLine(sw.ElapsedMilliseconds);
                 break;
             case 5:
                 if (f1 == false)

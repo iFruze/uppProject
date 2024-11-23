@@ -7,7 +7,7 @@ using Frame;
 namespace uppProject
 {
    internal class ResearchTeam
-    {
+   {
         private string title;
         private string org;
         private int regNumber;
@@ -161,7 +161,6 @@ namespace uppProject
             }
             return stringBuilder.ToString();
         }
-        
         public Paper Search()
         {
             Paper res = papers[0];
@@ -174,5 +173,5 @@ namespace uppProject
             }
             return res;
         }
-    }
+   }
 }
