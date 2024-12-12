@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,44 +7,20 @@ using System.Threading.Tasks;
 using Frame;
 namespace uppProject
 {
-   internal class ResearchTeam
+   internal class ResearchTeam : Team
    {
         private string title;
-        private string org;
-        private int regNumber;
         private TimeFrame time;
-        private Paper[] papers;
-        public override string ToString() => $"Исследование номер {this.RegNumber}\nНазвание: {this.Title}\nОрганизация, проводившая исследования: {this.Org}\nВремя проведения исследований: {this.Time}\n{this.Show()}";
+        private ArrayList papers;
+        private static int count = 0;
+        public override string ToString() => $"Название: {this.Title}\nОрганизация, проводившая исследования: {this.Name}\nРегистрационный номер: {this.RegisterNumber}\nВремя проведения исследований: {this.Time}\n{this.Show()}";
         public string Title
         {
-            get
-            {
-                return title;
-            }
-            set
-            { 
-                if (value == "")
-                {
-                    throw new ArgumentException("Пустая строка ввода названия.");
-                }
-                else
-                    title = value;
-            }
-        }
-        public string Org
-        {
-            get
-            {
-                return org;
-            }
+            get => title;
             set
             {
-                if (value == "")
-                {
-                    throw new ArgumentException("Пустая строка ввода организации.");
-                }
-                else
-                    org = value;
+                if (value == "") throw new ArgumentException("Название исследования не может быть пустым.");
+                title = value;
             }
         }
         public TimeFrame Time
@@ -62,43 +39,27 @@ namespace uppProject
                     time = value;
             }
         }
-        public int RegNumber
-        {
-            get
-            {
-                return regNumber;
-            }
-            set
-            {
-                if (value == 0)
-                {
-                    throw new ArgumentException("Пустая строка ввода названия.");
-                }
-                else
-                    regNumber = value;
-            }
-        }
-        public Paper this[int i]
-        {
-            get
-            {
-                if (papers[i] == null)
-                {
-                    throw new ArgumentNullException("Неправильный индекс.");
-                }
-                else
-                    return papers[i];
-            }
-            set
-            {
-                if (value == null)
-                {
-                    throw new ArgumentNullException("Пустой объект.");
-                }
-                else
-                    papers[i] = value;
-            }
-        }
+        //public Paper this[int i]
+        //{
+        //    get
+        //    {
+        //        if (papers[i] == null)
+        //        {
+        //            throw new ArgumentNullException("Неправильный индекс.");
+        //        }
+        //        else
+        //            return (Paper)papers[i];
+        //    }
+        //    set
+        //    {
+        //        if (value == null)
+        //        {
+        //            throw new ArgumentNullException("Пустой объект.");
+        //        }
+        //        else
+        //            papers[i] = value;
+        //    }
+        //}
         public bool this[TimeFrame i]
         {
             get
@@ -113,48 +74,29 @@ namespace uppProject
                 }
             }
         }
-        public ResearchTeam(string title, string org, int regNumber, TimeFrame time)
+        public ResearchTeam(string title, string org, int regNumber, TimeFrame time) : base(org, regNumber)
         {
             this.Title = title;
-            this.Org = org;
-            this.RegNumber = regNumber;
             this.Time = time;
-            papers = new Paper[0];
+            this.papers = new ArrayList();
+            count++;
         }
-        public ResearchTeam()
+        public ResearchTeam() : base()
         {
-            this.Title = "None";
-            this.Org = "None";
-            this.RegNumber = 1;
-            this.Time = 0;
-            papers = new Paper[0];
+            Random random = new Random();
+            this.Title = $"Исследование №{++count}";
+            this.Time = (TimeFrame)random.Next(0,3);
+            this.papers = new ArrayList();
         }
         public void AddPapers(params Paper[] paper)
         {
-            for(int i = 0; i < paper.Length; i++)
-            {
-                if(paper[i] == null)
-                {
-                    throw new ArgumentNullException("Пустая странца.");
-                }
-            }
-            int new_size = paper.Length + papers.Length;
-            Paper[] pap = new Paper[new_size];
-            for (int i = 0; i < papers.Length; i++)
-            {
-                pap[i] = papers[i];
-            }
-            int ind = 0;
-            for (int i = papers.Length; i < pap.Length; i++)
-            {
-                pap[i] = paper[ind++];
-            }
-            papers = pap;
+            if(paper.Contains(null)) throw new ArgumentNullException("Пустая странца.");
+            papers.AddRange(paper);
         }
         public string Show()
         {
             StringBuilder stringBuilder = new StringBuilder("\nСтраницы:\n\n");
-            foreach (Paper p in papers)
+            foreach (object p in papers)
             {
                 stringBuilder.Append(p.ToString());
                 stringBuilder.Append("\n\n");
@@ -163,15 +105,15 @@ namespace uppProject
         }
         public Paper Search()
         {
-            Paper res = papers[0];
-            foreach (Paper p in papers)
+            var res = papers[0];
+            foreach (var p in papers)
             {
-                if(res.Date < p.Date)
+                if((res as Paper).Date < (p as Paper).Date)
                 {
                     res = p;
                 }
             }
-            return res;
+            return (res as Paper);
         }
    }
 }

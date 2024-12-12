@@ -40,9 +40,10 @@ namespace uppProject
         }
         public Person()
         {
-            this.Name = "Мира";
-            this.Surname = "Камчик";
-            this.Birthday = new DateTime(1980, 4, 29);
+            Random r = new Random();
+            this.Name = ((Names)r.Next(0,10)).ToString();
+            this.Surname = ((Surnames)r.Next(0, 10)).ToString();
+            this.Birthday = DateTime.Now.AddDays(r.Next(-20000, -10000));
         }
         public Person(string name, string surname, DateTime birthday)
         {

@@ -19,9 +19,10 @@ namespace uppProject
         }
         public Paper()
         {
-            Publication = "Руководство по закапыванию хомячков";
+            Random r = new Random();    
+            Publication = ((PaperTitles)r.Next(0,17)).ToString();
             Info = new Person();
-            Date = new DateTime(2020, 02, 13);
+            Date = DateTime.Now.AddDays(r.Next(-5000, -1));
         }
         public override string ToString() => $"Название: {this.Publication}\nАвтор: {this.Info.ToShortString()}\nДата публикации: {this.Date.ToShortDateString()}";
     }

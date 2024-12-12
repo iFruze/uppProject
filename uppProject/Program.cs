@@ -15,28 +15,28 @@ while(true)
                 Environment.Exit(0);
                 break;
             case 1:
-                string title, org;
-                int regNumber;
-                TimeFrame time;
-                Console.Write("Название публикации: ");
-                title = Console.ReadLine();
-                Console.Write("Организация, проводившая исследование: ");
-                org = Console.ReadLine();
-                Console.Write("Номер: ");
-                regNumber = Convert.ToInt32(Console.ReadLine());
-                int t = -1;
-                do
-                {
-                    Console.Write("Как долго проводились исследования?\n1 - Год\n2 - Два года\n3 - Долго\nПункт: ");
-                    t = Convert.ToInt32(Console.ReadLine());
-                } while (t < 1 || t > 3);
-                time = t switch
-                {
-                    1 => TimeFrame.Year,
-                    2 => TimeFrame.TwoYears,
-                    3 => TimeFrame.Long
-                };
-                team = new ResearchTeam(title, org, regNumber, time);
+                //string title, org;
+                //int regNumber;
+                //TimeFrame time;
+                //Console.Write("Название публикации: ");
+                //title = Console.ReadLine();
+                //Console.Write("Организация, проводившая исследование: ");
+                //org = Console.ReadLine();
+                //Console.Write("Номер: ");
+                //regNumber = Convert.ToInt32(Console.ReadLine());
+                //int t = -1;
+                //do
+                //{
+                //    Console.Write("Как долго проводились исследования?\n1 - Год\n2 - Два года\n3 - Долго\nПункт: ");
+                //    t = Convert.ToInt32(Console.ReadLine());
+                //} while (t < 1 || t > 3);
+                //time = t switch
+                //{
+                //    1 => TimeFrame.Year,
+                //    2 => TimeFrame.TwoYears,
+                //    3 => TimeFrame.Long
+                //};
+                //team = new ResearchTeam(title, org, regNumber, time);
                 f1 = true;
                 break;
             case 2:
@@ -44,44 +44,46 @@ while(true)
                 {
                     throw new Exception("Сначала надо создать публикацию.");
                 }
-                string publication;
-                string name, surname;
-                int year, month, day;
-                int year1, month1, day1;
-                Console.Write("Название исследования: ");
-                publication = Console.ReadLine();
-                Console.Write("Имя автора: ");
-                name = Console.ReadLine();
-                Console.Write("Фамилия автора: ");
-                surname = Console.ReadLine(); 
-                bool f = true;
-                DateTime dataB;
-                do 
-                {
-                    f = true;
-                    Console.WriteLine("Введите дату рождения автора в формате: yyyy.mm.dd"); 
-                    string date1 = Console.ReadLine();
-                    if (!DateTime.TryParse(date1, out dataB))
-                    {
-                        Console.WriteLine("Ошибка ввода, повторите.");
-                        f = false;
-                    }
-                    
-                } while (f==false);
-                DateTime dataP;
-                do
-                {
-                    f = true;
-                    Console.WriteLine("Введите дату выпска исследования в формате: yyyy.mm.dd");
-                    string date1 = Console.ReadLine();
-                    if (!DateTime.TryParse(date1, out dataP))
-                    {
-                        Console.WriteLine("Ошибка ввода, повторите.");
-                        f = false;
-                    }
-                } while (!f);
-                Paper pap = new Paper(publication, new Person(name, surname, dataB), dataP);
-                team.AddPapers(pap);
+                //string publication;
+                //string name, surname;
+                //int year, month, day;
+                //int year1, month1, day1;
+                //Console.Write("Название исследования: ");
+                //publication = Console.ReadLine();
+                //Console.Write("Имя автора: ");
+                //name = Console.ReadLine();
+                //Console.Write("Фамилия автора: ");
+                //surname = Console.ReadLine();
+                //bool f = true;
+                //DateTime dataB;
+                //do
+                //{
+                //    f = true;
+                //    Console.WriteLine("Введите дату рождения автора в формате: yyyy.mm.dd");
+                //    string date1 = Console.ReadLine();
+                //    if (!DateTime.TryParse(date1, out dataB))
+                //    {
+                //        Console.WriteLine("Ошибка ввода, повторите.");
+                //        f = false;
+                //    }
+
+                //} while (f == false);
+                //DateTime dataP;
+                //do
+                //{
+                //    f = true;
+                //    Console.WriteLine("Введите дату выпска исследования в формате: yyyy.mm.dd");
+                //    string date1 = Console.ReadLine();
+                //    if (!DateTime.TryParse(date1, out dataP))
+                //    {
+                //        Console.WriteLine("Ошибка ввода, повторите.");
+                //        f = false;
+                //    }
+                //} while (!f);
+                //Paper pap = new Paper(publication, new Person(name, surname, dataB), dataP);
+                //team.AddPapers(pap);
+                //Paper paper = new Paper();
+                team.AddPapers(new Paper(), new Paper(), new Paper(), new Paper(), new Paper(), new Paper(), new Paper());
                 break;
             case 3:
                 if (f1 == false)
@@ -91,7 +93,7 @@ while(true)
                 Console.WriteLine($"Самая поздняя публикация:\n{team.Search()}");
                 break;
             case 4:
-                
+
                 Paper[] paper1 = new Paper[10000];
                 for (int i = 0; i < paper1.Length; i++) paper1[i] = new Paper();
                 System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
@@ -101,7 +103,7 @@ while(true)
                     paper1[i].Date = DateTime.Now;
                 int a2 = Environment.TickCount;
                 sw.Stop();
-                Console.WriteLine(  sw.ElapsedMilliseconds);
+                Console.WriteLine(sw.ElapsedMilliseconds);
                 //Console.WriteLine(  sw.ElapsedTicks);
                 Paper[,] paper2 = new Paper[100, 100];
                 for (int i = 0; i < paper2.GetLength(0); i++)
@@ -152,8 +154,8 @@ while(true)
                 TimeFrame temp = pp switch
                 {
                     1 => TimeFrame.Year,
-                    2=>TimeFrame.TwoYears,
-                    3=>TimeFrame.Long
+                    2 => TimeFrame.TwoYears,
+                    3 => TimeFrame.Long
                 };
                 Console.WriteLine(team[temp]);
                 break;
