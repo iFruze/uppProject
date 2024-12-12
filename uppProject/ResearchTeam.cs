@@ -7,13 +7,41 @@ using System.Threading.Tasks;
 using Frame;
 namespace uppProject
 {
-   internal class ResearchTeam : Team
+   internal class ResearchTeam : Team, INameAndCopy
    {
         private string title;
         private TimeFrame time;
         private ArrayList papers;
+        private ArrayList persons;
         private static int count = 0;
         public override string ToString() => $"Название: {this.Title}\nОрганизация, проводившая исследования: {this.Name}\nРегистрационный номер: {this.RegisterNumber}\nВремя проведения исследований: {this.Time}\n{this.Show()}";
+        public string ToShortString() => $"Название: {this.Title}\nОрганизация, проводившая исследования: {this.Name}\nРегистрационный номер: {this.RegisterNumber}\nВремя проведения исследований: {this.Time}";
+        public ArrayList Papers
+        {
+            get => papers;
+            set => papers = new ArrayList(value);
+        }
+        public ArrayList Persons
+        {
+            get => persons;
+            set => persons = new ArrayList(value);
+        }
+        public Paper LastPublication
+        {
+            get
+            {
+                if (papers.Contains(null)) return null;
+                var res = papers[0];
+                foreach (var p in papers)
+                {
+                    if ((res as Paper).Date < (p as Paper).Date)
+                    {
+                        res = p;
+                    }
+                }
+                return (res as Paper);
+            }
+        }
         public string Title
         {
             get => title;
@@ -60,6 +88,7 @@ namespace uppProject
         //            papers[i] = value;
         //    }
         //}
+        object INameAndCopy.DeepCopy() => new ResearchTeam(this.Title, this.Name, this.RegisterNumber, this.Time, this.Papers, this.Persons);
         public bool this[TimeFrame i]
         {
             get
@@ -74,11 +103,12 @@ namespace uppProject
                 }
             }
         }
-        public ResearchTeam(string title, string org, int regNumber, TimeFrame time) : base(org, regNumber)
+        public ResearchTeam(string title, string org, int regNumber, TimeFrame time, ArrayList paper, ArrayList person) : base(org, regNumber)
         {
             this.Title = title;
             this.Time = time;
-            this.papers = new ArrayList();
+            this.papers = new ArrayList(paper);
+            this.persons = new ArrayList(person);
             count++;
         }
         public ResearchTeam() : base()
@@ -86,12 +116,19 @@ namespace uppProject
             Random random = new Random();
             this.Title = $"Исследование №{++count}";
             this.Time = (TimeFrame)random.Next(0,3);
-            this.papers = new ArrayList();
+            this.Papers = new ArrayList();
+            this.Persons = new ArrayList();
         }
         public void AddPapers(params Paper[] paper)
         {
             if(paper.Contains(null)) throw new ArgumentNullException("Пустая странца.");
             papers.AddRange(paper);
+            foreach(Paper t in papers) this.AddMembers(t.Info);
+        }
+        public void AddMembers(params Person[] person)
+        {
+            if(person.Contains(null)) throw new ArgumentNullException("Пустое поле участника.");
+            this.persons.AddRange(person);
         }
         public string Show()
         {
@@ -103,17 +140,17 @@ namespace uppProject
             }
             return stringBuilder.ToString();
         }
-        public Paper Search()
-        {
-            var res = papers[0];
-            foreach (var p in papers)
-            {
-                if((res as Paper).Date < (p as Paper).Date)
-                {
-                    res = p;
-                }
-            }
-            return (res as Paper);
-        }
+        //public Paper Search()
+        //{
+        //    var res = papers[0];
+        //    foreach (var p in papers)
+        //    {
+        //        if((res as Paper).Date < (p as Paper).Date)
+        //        {
+        //            res = p;
+        //        }
+        //    }
+        //    return (res as Paper);
+        //}
    }
 }

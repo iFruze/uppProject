@@ -26,7 +26,7 @@ namespace uppProject
             get => registerNumber;
             set
             {
-                if (value < 0) throw new ArgumentException("Номер организации не может быть отрицательным");
+                if (value <= 0) throw new ArgumentException("Номер организации не может быть отрицательным либо равен 0");
                 registerNumber = value;
             }
         }
