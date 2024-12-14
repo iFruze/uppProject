@@ -3,18 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Frame;
 namespace uppProject
 {
-   internal class ResearchTeam : Team, INameAndCopy
+   internal class ResearchTeam : Team, INameAndCopy, IEnumerable<Person>
    {
         private string title;
         private TimeFrame time;
         private ArrayList papers;
         private ArrayList persons;
         private static int count = 0;
-        public override string ToString() => $"Название: {this.Title}\nОрганизация, проводившая исследования: {this.Name}\nРегистрационный номер: {this.RegisterNumber}\nВремя проведения исследований: {this.Time}\n{this.Show()}";
+        public override string ToString() => $"Название: {this.Title}\nОрганизация, проводившая исследования: {this.Name}\nРегистрационный номер: {this.RegisterNumber}\nВремя проведения исследований: {this.Time}\n{this.ShowPapers()}";
         public string ToShortString() => $"Название: {this.Title}\nОрганизация, проводившая исследования: {this.Name}\nРегистрационный номер: {this.RegisterNumber}\nВремя проведения исследований: {this.Time}";
         public ArrayList Papers
         {
@@ -42,6 +43,47 @@ namespace uppProject
                 return (res as Paper);
             }
         }
+        public IEnumerator<Person> GetEnumerator()
+        {
+           // ResearchTeamEnumerator list = new ResearchTeamEnumerator();
+            List<Person> list2 = new List<Person>();
+            foreach (Paper t in papers)
+            {
+                list2.Add(t.Info);
+            }
+            return new ResearchTeamEnumerator(list2);
+        }
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            throw new NotImplementedException();
+        }
+        System.Collections.Generic.IEnumerator<Person> IEnumerable<Person>.GetEnumerator()
+        {
+            throw new NotImplementedException();
+        }
+        public Team Base
+        {
+            get => new Team(this.Name, this.RegisterNumber);
+            set => new Team(value.Name, value.RegisterNumber);
+        }
+        public IEnumerable<Person> PersonsWithoutPublications()
+        {
+            ArrayList coincidence = new ArrayList();
+            foreach(Paper t in papers) coincidence.Add(t.Info);
+            foreach (Person t in persons)
+            {
+                if(!coincidence.Contains(t)) yield return t;
+            }
+        }
+        public IEnumerable<int> PublicationsFromNYears(int n)
+        {
+           // ArrayList coincidence = new ArrayList();
+            for (int i = 0; i < papers.Count; i++)
+            {
+                if ((papers[i] as Paper).Date.Year >= DateTime.Now.AddYears(-n).Year)
+                    yield return i;
+            }
+        }
         public string Title
         {
             get => title;
@@ -67,27 +109,6 @@ namespace uppProject
                     time = value;
             }
         }
-        //public Paper this[int i]
-        //{
-        //    get
-        //    {
-        //        if (papers[i] == null)
-        //        {
-        //            throw new ArgumentNullException("Неправильный индекс.");
-        //        }
-        //        else
-        //            return (Paper)papers[i];
-        //    }
-        //    set
-        //    {
-        //        if (value == null)
-        //        {
-        //            throw new ArgumentNullException("Пустой объект.");
-        //        }
-        //        else
-        //            papers[i] = value;
-        //    }
-        //}
         object INameAndCopy.DeepCopy() => new ResearchTeam(this.Title, this.Name, this.RegisterNumber, this.Time, this.Papers, this.Persons);
         public bool this[TimeFrame i]
         {
@@ -119,21 +140,37 @@ namespace uppProject
             this.Papers = new ArrayList();
             this.Persons = new ArrayList();
         }
-        public void AddPapers(params Paper[] paper)
+        public void AddPapers(Person p = null, params Paper[] paper)
         {
             if(paper.Contains(null)) throw new ArgumentNullException("Пустая странца.");
-            papers.AddRange(paper);
-            foreach(Paper t in papers) this.AddMembers(t.Info);
+            if ((object)p != null)
+            {
+                for (int i = 0; i < paper.Length; i++) paper[i].Info = p;
+                papers.AddRange(paper);
+                return;
+            }
+            foreach (Paper t in paper)
+            {
+                if (persons.Contains(t.Info))
+                {
+                    papers.Add(t);
+                }
+                else
+                {
+                    papers.Add(t);
+                    this.AddMembers(t.Info);
+                }
+            }
         }
         public void AddMembers(params Person[] person)
         {
             if(person.Contains(null)) throw new ArgumentNullException("Пустое поле участника.");
             this.persons.AddRange(person);
         }
-        public string Show()
+        public string ShowPapers()
         {
             StringBuilder stringBuilder = new StringBuilder("\nСтраницы:\n\n");
-            foreach (object p in papers)
+            foreach (Paper p in papers)
             {
                 stringBuilder.Append(p.ToString());
                 stringBuilder.Append("\n\n");
@@ -152,5 +189,22 @@ namespace uppProject
         //    }
         //    return (res as Paper);
         //}
+        public IEnumerable<Person> PersonsWhithMoreThanOnePublications()
+        {
+            ArrayList condience = new ArrayList();
+            foreach (Paper p in papers)
+            {
+                int count = 0;
+                foreach(Paper temp in papers)
+                {
+                    if(p.Info == temp.Info && !condience.Contains(p.Info))
+                    {
+                        count++;
+                    }
+                }
+                condience.Add(p.Info);
+                if (count > 1) yield return p.Info; 
+            }
+        }
    }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace uppProject
 {
-    internal class Person
+    internal class Person : INameAndCopy
     {
         private string name;
         private string surname;
@@ -51,7 +51,12 @@ namespace uppProject
             this.Surname = surname;
             this.Birthday = birthday;
         }
+        object INameAndCopy.DeepCopy() => new Person(Name, Surname, Birthday);
         public override string ToString() => $"Имя: {this.Name}\nФамилия: {this.Surname}\nДата рождения: {this.Birthday.ToShortDateString()}";
         public virtual string ToShortString() => $"{this.Name} {this.Surname}";
+        public override bool Equals(object? obj) => obj is Person t ? this.Name == t.Name && this.Surname == t.Surname && this.Birthday == t.Birthday : throw new ArgumentNullException("Неверный тип объекта");
+        public static bool operator ==(Person t1, Person t2) => t1.Name == t2.Name && t1.Surname == t2.Surname && t1.Birthday == t2.Birthday;
+        public static bool operator !=(Person t1, Person t2) => t1.Name != t2.Name && t1.Surname != t2.Surname && t1.Birthday != t2.Birthday;
+        public override int GetHashCode() => (this.Name.GetHashCode() ^ this.Surname.GetHashCode() | this.Birthday.GetHashCode()) << 1234;
     }
 }
