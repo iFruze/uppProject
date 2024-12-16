@@ -3,7 +3,6 @@ using System.Text.RegularExpressions;
 using System.Collections;
 using uppProject;
 
-
 Console.WriteLine("Создать два объекта типа Team с совпадающими данными и проверить, что ссылки на объекты не равны, а объекты равны, вывести значения хэш-кодов для объектов:");
 Team team1 = new Team();
 Team team2 = new Team();
